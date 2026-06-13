@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Bortika!</title>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-pink: #ff6b8b;
+            --secondary-pink: #ff8e72;
+            --dark-purple: #2c1a32;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fef1f2 0%, #ffd1d9 100%);
+            color: var(--dark-purple);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(255, 107, 139, 0.2);
+            max-width: 600px;
+            width: 100%;
+            z-index: 10;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 4rem;
+            color: var(--primary-pink);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+            animation: pulse 2s infinite alternate;
+        }
+
+        .sub-heading {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #7d5a7a;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        /* Countdown Timer Layout */
+        .countdown-container {
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 15px;
+            border-radius: 16px;
+        }
+
+        .timer-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: var(--primary-pink);
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .time-box {
+            background: var(--primary-pink);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 12px;
+            min-width: 70px;
+            box-shadow: 0 4px 10px rgba(255, 107, 139, 0.3);
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .time-box label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        /* Age Badge */
+        .age-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-pink), var(--secondary-pink));
+            color: white;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.4);
+        }
+
+        p.wishes {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #4a3b4e;
+        }
+
+        /* Action Buttons */
+        .btn {
+            background: linear-gradient(45deg, var(--primary-pink), var(--secondary-pink));
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 107, 139, 0.4);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(255, 107, 139, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Background Balloons Canvas styling */
+        #balloon-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 65px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            bottom: -100px;
+            animation: floatUp 8s linear infinite;
+            opacity: 0.8;
+        }
+
+        .balloon::before {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 22px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2.8rem; }
+            .time-box { min-width: 55px; padding: 8px 10px; }
+            .time-box span { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="balloon-container"></div>
+
+    <div class="card">
+        <div class="age-badge" id="age-info">Celebrating Life!</div>
+        <h1>Happy Birthday, Bortika!</h1>
+        <div class="sub-heading">October 15, 2011</div>
+        
+        <div class="countdown-container">
+            <div class="timer-title" id="timer-status">Countdown to Next Birthday</div>
+            <div class="countdown">
+                <div class="time-box"><span id="days">00</span><label>Days</label></div>
+                <div class="time-box"><span id="hours">00</span><label>Hrs</label></div>
+                <div class="time-box"><span id="minutes">00</span><label>Mins</label></div>
+                <div class="time-box"><span id="seconds">00</span><label>Secs</label></div>
+            </div>
+        </div>
+
+        <p class="wishes">
+            May your day be filled with endless laughter, sweet surprises, and beautiful moments. 
+            Wishing you a fantastic year ahead full of success, adventure, and joy!
+        </p>
+
+        <button class="btn" onclick="celebrate()">Click for Surprise 🎉</button>
+    </div>
+
+    <!-- Background Music (Optional: Replace source URL with real audio track if needed) -->
+    <audio id="birthday-audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
+
+    <script>
+        // Birthday Configuration
+        const targetName = "Bortika Das";
+        const birthDate = new Date("2011-10-15");
+
+        // Calculate and display dynamic age
+        function updateAge() {
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            document.getElementById('age-info').innerText = `Turning ${age + 1} on her next birthday! (Born 2011)`;
+        }
+
+        // Countdown Logic
+        function updateCountdown() {
+            const now = new Date();
+            let currentYear = now.getFullYear();
+            let nextBirthday = new Date(currentYear, 9, 15); // October is month index 9
+
+            // If birthday passed this year, countdown to next year's birthday
+            if (now > nextBirthday) {
+                nextBirthday.setFullYear(currentYear + 1);
+            }
+
+            // Check if today is the birthday
+            if (now.getDate() === 15 && now.getMonth() === 9) {
+                document.getElementById('timer-status').innerText = "🎉 IT'S HER BIRTHDAY TODAY! 🎉";
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+                return;
+            }
+
+            const diff = nextBirthday - now;
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+            document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+            document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+            document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+        }
+
+        // Confetti Burst Trigger & Optional Audio Playback
+        function celebrate() {
+            // Trigger Confetti explosion
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#ff6b8b', '#ff8e72', '#ffeb3b', '#4caf50', '#00bcd4']
+            });
+
+            // Play background music safely upon user click interaction
+            const audio = document.getElementById('birthday-audio');
+            if (audio.paused) {
+                audio.play().catch(error => console.log("Audio playback waiting for gesture context"));
+            }
+        }
+
+        
+        const balloonColors = ['#ff6b8b', '#ff8e72', '#ffd1d9', '#ffb6c1', '#ff4081'];
+        function createBalloons() {
+            const container = document.getElementById('balloon-container');
+            const balloonCount = 20;
+
+            for (let i = 0; i < balloonCount; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                
+                const randomColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+                balloon.style.backgroundColor = randomColor;
+                balloon.style.setProperty('--balloon-border-color', randomColor);
+                
+                // Random position & animation delay
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.animationDelay = Math.random() * 6 + 's';
+                balloon.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                
+                container.appendChild(balloon);
+            }
+        }
+
+        // Initialize elements
+        updateAge();
+        createBalloons();
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
